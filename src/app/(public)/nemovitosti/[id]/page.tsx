@@ -3,7 +3,7 @@
 import React from 'react';
 import { PrismaClient } from '@prisma/client';
 import { notFound } from 'next/navigation';
-import ContactForm from './_components/ContactForm';
+import ContactForm from '../../../_components/ContactForm';
 
 const prisma = new PrismaClient();
 

@@ -78,4 +78,4 @@ export default function ContactForm({ propertyId }: Props) {
       {error && <div className="text-red-600">{error}</div>}
     </form>
   );
-}
+} 

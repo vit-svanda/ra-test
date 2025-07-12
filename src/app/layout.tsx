@@ -2,18 +2,14 @@
 // Root layout of the entire application
 import React from 'react';
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Raleway } from "next/font/google";
 import "./globals.css";
 import Analytics from './_components/Analytics';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const raleway = Raleway({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-raleway",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +20,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="cs">
-      <body className={`bg-gray-50 min-h-screen ${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`bg-gray-50 min-h-screen antialiased ${raleway.variable} font-sans`}>
         <Analytics />
         {children}
       </body>

@@ -1,0 +1,87 @@
+// filepath: prisma/schema.prisma
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+// Model pro makléře
+model Agent {
+  id                String     @id @default(cuid())
+  email             String     @unique
+  name              String
+  phone             String?
+  imageUrl          String?
+  properties        Property[]
+  leads             Lead[]
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  googleRefreshToken String?    // Add this line
+}
+
+// Model pro nemovitost
+model Property {
+  id              String   @id @default(cuid())
+  title           String
+  description     String?  @db.Text
+  address         String
+  price           Int
+  area            Int      // Užitná plocha v m2
+  plotArea        Int?     // Plocha pozemku v m2
+  rooms           String   // např. "3+1", "4+kk"
+  imageUrls       String[]
+  isPublished     Boolean  @default(false)
+  
+  type            PropertyType @default(SALE)
+  condition       PropertyCondition @default(GOOD)
+
+  agentId         String
+  agent           Agent    @relation(fields: [agentId], references: [id])
+  
+  leads           Lead[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// Model pro poptávku
+model Lead {
+  id            String   @id @default(cuid())
+  clientName    String
+  clientEmail   String
+  clientPhone   String?
+  message       String   @db.Text
+  status        LeadStatus @default(NEW)
+  
+  propertyId    String
+  property      Property @relation(fields: [propertyId], references: [id])
+
+  agentId       String
+  agent         Agent    @relation(fields: [agentId], references: [id])
+  
+  createdAt     DateTime @default(now())
+}
+
+enum PropertyType {
+  SALE // Prodej
+  RENT // Pronájem
+}
+
+enum PropertyCondition {
+  NEW_BUILDING // Novostavba
+  GOOD // Dobrý stav
+  NEEDS_RECONSTRUCTION // K rekonstrukci
+}
+
+enum LeadStatus {
+  NEW // Nová
+  CONTACTED // Zkontaktováno
+  VIEWING_SCHEDULED // Domluvena prohlídka
+  CLOSED // Uzavřeno
+}
